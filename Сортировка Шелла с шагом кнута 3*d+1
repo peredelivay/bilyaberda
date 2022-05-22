@@ -1,0 +1,99 @@
+#include <iostream>
+#include <cmath>
+#include <ctime>
+using namespace std;
+
+void Shell(long long int arr[],long long int n)
+{
+    long long int perestanovka = 0;
+    long long int sravnenie = 0;
+    long long int d = 1;
+    int k = log2(n) - 1;            // Вычисляем количество смещений
+    for (int i = 0; i < k; i++)
+    {
+        d = d * 3 + 1;              // Вычисляем первое смещение
+    }
+    int time1 = clock();
+
+    while (d > 0)
+    {
+
+        for (long long int i = 0; i < n - d; i++)
+        {
+            long long int j = i;
+            sravnenie++;
+            while (j >= 0 && arr[j] > arr[j + d])       //Если элемент левее меньше, чем элемент правее
+            {
+                sravnenie++;
+                perestanovka++;
+                swap(arr[j], arr[j + d]);               //Меняем элементы согласно смещению
+                j--;
+            }
+        }
+        d = (d - 1) / 3;                //Уменьшаем смещение согласно шагу Кнута (1 способ)
+    }
+
+    int time2 = clock();
+
+    cout << "\nСравнений : " << sravnenie << endl;
+    cout << "Перестановок: " << perestanovka << endl;
+    cout << "Время: " << time2 - time1 << endl;
+}
+
+int print(long long int data[],long long int dataLen)
+{
+    cout << "\n|Результат: " << endl;
+    cout << "{ ";
+    for (long long int i = 0; i < dataLen; i++)
+    {
+        cout << data[i] << " ";
+    }
+    cout << " }";
+    return 0;
+}
+
+void main()
+{
+    setlocale(LC_ALL, "rus");
+    long long int dataLen;
+    int method, way;
+
+    cout << "Введите количество элементов массива: ";
+    cin >> dataLen;
+    long long int* data = new long long int[dataLen];
+
+    cout << "\nВведите способ заполнения массива: (1. Ручной; 2. Рандомный): ";
+    cin >> way;
+
+    if (way == 1)
+    {
+        for (long long int i = 0; i < dataLen; i++)
+        {
+            data[i] = dataLen - i;
+        }
+    }
+
+    else if (way == 2)
+    {
+        for (long long int i = 0; i < dataLen; i++)
+        {
+            // cout << "Элемент [" << i + 1 << "] (Рандом) = ";
+            data[i] = rand() % 100;
+            // cout << data[i] << endl;
+        }
+    }
+    cout << "\nВведите способ сортировки массива: (1. Сортировка Шелла): ";
+    cin >> method;
+    if (method == 1)
+    {
+        cout << "\n\n Результат сортировки Шелла: 1" << endl;
+        Shell(data, dataLen);
+    }
+    /*if (method == 2)
+    {
+        cout << "\n\n Результат сортировки Шелла 2: " << endl;
+        ShellKnuth()
+    }*/
+    cout << "Конечный массив: ";
+    //print(data, dataLen);
+}
